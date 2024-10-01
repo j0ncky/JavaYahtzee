@@ -41,24 +41,29 @@ public class Yahtzee {
 
 
     private static void ChooseDice() {
-        Scanner scan = new Scanner(System.in);
+        //Initialization of variables
+    	Scanner scan = new Scanner(System.in);
         boolean illegal = true;
         boolean[] diceChoices = new boolean[5];
+        
+        //Initialize diceChoices all to false (no dice are saved)
         for (int i = 0; i < diceChoices.length; i++) {
             diceChoices[i] = false;
         }
         
+        //Loop to make sure user input is legal; only loops if user input is not able to be accepted
         while (illegal) {
             illegal = false;
             System.out.println("Which dice would you like to keep?");
 
+            //Takes user input numbers of 1-5 and sets those corresponding dice in diceChoices to be true (saved)
             String input = scan.nextLine();
             String[] tempArray = input.split(" ");
             for (int i = 0; i < tempArray.length; i++) {
-                diceChoices[Integer.parseInt(tempArray[i]] = true;
+                diceChoices[Integer.parseInt(tempArray[i]) - 1] = true;
                 
             }
-            for (int i = 0; i < diceChoices.size(); i++) {
+            for (int i = 0; i < diceChoices.length; i++) {
                 if (diceChoices.get(i) == 0) {
                     diceChoices.remove(i);
                     System.out.println(diceChoices.get(i));
