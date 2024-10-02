@@ -4,45 +4,62 @@ public class Yahtzee {
     
 	//Main
 	public static void main(String[] args) {
-        //Initialization of variables
+        
+		//Initialization of variables
 		boolean[] players = new boolean[6];
     	Dice[] diceArray = new Dice[5];
         boolean[] savedDice = new boolean[5];
+        Scanner scan = new Scanner(System.in);
         
         for (int i = 0; i < 5; i++) {
             diceArray[i] = new Dice();
         }
 
         
-
-        Scanner scan = new Scanner(System.in);
-        
         System.out.println("How many players are playing today?");
         
+        //While loop used to validate user input for player count
         while (true) {
         	int playerCount = 0;
+        	boolean isNumber = true;
         	
-            try {
-    	        playerCount = scan.nextInt();
-    	       
-    	        for (int i = 0; i < playerCount; i++) {
-    	            players[i] = true;
-    	        }
-    	        
-    	        if (playerCount < 2) {
-    	        	throw new ArithmeticException("At least 2 players are required.");
-    	        }
-    	        
-    	        break;
-            }
-            catch (Exception e) {
-            	System.out.println("Please enter a number from 2 to 6.");
-            	for (int i = 0; i < players.length; i++) {
-            		players[i] = false;
-            	}
-            	playerCount = 0;
-            }
+        	try {
+        		playerCount = Integer.parseInt(scan.nextLine());
+        	}
+        	catch (NumberFormatException e) {
+        		System.out.println("Please enter a number");
+        		isNumber = false;
+        	}
+        	
+        	if (isNumber == true) {
+        		
+        		try {
+    		        for (int i = 0; i < playerCount; i++) {
+    		            players[i] = true;
+    		        }
+    		        
+    		        if (playerCount < 2) {
+    		        	throw new ArithmeticException("At least 2 players are required.");
+    		        }
+    		        
+    		        break;
+                }
+                catch (Exception e) {
+    			    System.out.println("Please enter a number from 2 to 6.");
+    			    
+    			    for (int i = 0; i < players.length; i++) {
+    			    	players[i] = false;
+    			    }
+    			    
+                }
+        		
+        	}
+        	
+            
+           
         }
+      
+        
         
         for (boolean b : players) {
             System.out.println(b);
@@ -55,6 +72,11 @@ public class Yahtzee {
 		        System.out.println(diceArray[0].value);
 		
 		        savedDice = ChooseDice(savedDice);
+		        
+		        //Display savedDice array for testing
+		        for (int i = 0; i < savedDice.length; i++) {
+		                System.out.println(savedDice[i]);
+		        }
 		
 		        scan.close();
 		/* ------------------------------------------- */
@@ -89,6 +111,11 @@ public class Yahtzee {
             String input = scan.nextLine();
             String[] boolArrayInt = input.split(" ");
 
+            //Resets boolArray in case mistakes were made
+            for (int i = 0; i < boolArray.length; i++) {
+            	boolArray[i] = false;
+            }
+            
             //Try statement catches any numbers less than 1 or greater than 5, due to the array size constraint
             try {
             	//Takes user input numbers of 1-5 and sets those corresponding dice in boolArray to be true (saved)
@@ -104,10 +131,6 @@ public class Yahtzee {
             }
             
             if (!outOfBounds) {
-            	//Display boolArray array for testing
-	            for (int i = 0; i < boolArray.length; i++) {
-	                    System.out.println(boolArray[i]);
-	            }
 	
 	            //For loop for validating user input
 	            for (int i = 0; i < boolArray.length; i++) {
@@ -120,14 +143,7 @@ public class Yahtzee {
 	                        break;
 	                    }
 	                }
-	                /*
-	                //Checks if any integers are smaller than 1 or greater than 5
-	                if (Integer.parseInt(boolArrayInt[i]) < 1 || Integer.parseInt(boolArrayInt[i]) > 5 ) {
-	                    illegal = true;
-	                    System.out.println("Please only input numbers from 1 to 5.");
-	                    break;
-	                } 
-	                */
+	                
 	            }
 	            
             }
