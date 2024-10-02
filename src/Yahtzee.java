@@ -67,19 +67,39 @@ public class Yahtzee {
         //Create Scorecards for every player
 
         //Loop 13 times - only 13 turns are possible in a game of Yahtzee
-        for (int t = 1; t <=13; t++) {
-        
+        for (int t = 1; t <= 13; t++) {
+        System.out.println("Turn " + t);
+        	
         	//Loop for however many players there are
         	for (int p = 1; p <= playerCount; p++) {
         			
         		//Loop up to 3 times, or break if they save all 5 dice
         		for(int i = 1; i <= 3; i++) {
         			
+        			//If this is the first roll of the turn for this player, makes sure no dice are saved
+        			//Also, ends the rolling if the player saves all 5 die
+        			if (i == 1) {
+        				for (int j = 0; j < savedDice.length; j++) {
+        					savedDice[j] = false;
+        					System.out.println("reset");
+        				}
+        			}
+        			
+        			//TODO: End the rolling if the player has saved all 5 dice
+        			
         			//Rolls the unsaved dice
         			for (int s = 0; s < savedDice.length; s++) {
-        				if (savedDice[s] == true) {
+        				if (savedDice[s] == false) {
         					diceArray[s].Roll();
         				}
+        			}
+        			
+        			//SortDiceArray(diceArray);
+        			DisplayDiceValues(diceArray);
+        			
+        			
+        			if (i != 3) {
+        				ChooseDice(savedDice, scan);
         			}
         		}
         			
@@ -88,24 +108,26 @@ public class Yahtzee {
         	
         }
         
-        //Count up scores, determine winner
+//Count up scores, determine winner
+
+/* ------------------------------------------- */
+/*          THIS SECTION IS FOR TESTING        */
+
+        diceArray[0].Roll();
+        System.out.println(diceArray[0].value);
+
+        savedDice = ChooseDice(savedDice, scan);
         
-		/* ------------------------------------------- */
-		/*          THIS SECTION IS FOR TESTING        */
-		
-		        diceArray[0].Roll();
-		        System.out.println(diceArray[0].value);
-		
-		        savedDice = ChooseDice(savedDice);
-		        
-		        //Display savedDice array for testing
-		        for (int i = 0; i < savedDice.length; i++) {
-		                System.out.println(savedDice[i]);
-		        }
-		
-		        scan.close();
-		/* ------------------------------------------- */
+        //Display savedDice array for testing
+        for (int i = 0; i < savedDice.length; i++) {
+                System.out.println(savedDice[i]);
+        }
+
+        
+/* ------------------------------------------- */
     
+        scan.close();
+		        
     }
 
     
@@ -114,10 +136,9 @@ public class Yahtzee {
 	
     //Methods
 
-    private static boolean[] ChooseDice(boolean[] boolArray) {
+    private static boolean[] ChooseDice(boolean[] boolArray, Scanner scanner) {
     	
         //Initialization of variables
-    	Scanner scan = new Scanner(System.in);
         boolean illegal = true;
         boolean outOfBounds = false;
         
@@ -134,7 +155,7 @@ public class Yahtzee {
             
             //Asks for input and saves it
             System.out.println("Which dice would you like to keep?");
-            String input = scan.nextLine();
+            String input = scanner.nextLine();
             String[] boolArrayInt = input.split(" ");
 
             //Resets boolArray in case mistakes were made
@@ -176,11 +197,32 @@ public class Yahtzee {
 	            
         }
         
-        scan.close();
-        
         return boolArray;
     }
-
+    
+    //Selection sort for an array of Dice
+    private static void SortDiceArray(Dice[] arr) {
+    	
+    	for (int j = 1; j < arr.length; j++) {
+    		
+    		int temp = arr[j].value;
+    		int i= j - 1;
+    		while ((i >= 0) && (arr[i].value >= temp)) {
+    			arr[i+1].value = arr[i].value;
+    		}
+    		
+    		arr[i+1].value = temp;
+    	}
+    	
+    }
+    
+    private static void DisplayDiceValues(Dice[] arr) {
+    	
+    	System.out.println("Your dice values are now:");
+		for (int i = 0; i < 5; i++) {
+			System.out.println("Die " + (i + 1) + ": " + arr[i].value);
+		}
+    }
     
 }
 
