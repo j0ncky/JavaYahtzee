@@ -7,8 +7,10 @@ public class Yahtzee {
         
 		//Initialization of variables
 		boolean[] players = new boolean[6];
-    	Dice[] diceArray = new Dice[5];
+        int playerCount = 0;
+        Dice[] diceArray = new Dice[5];
         boolean[] savedDice = new boolean[5];
+        Scorecard[] scorecards;
         Scanner scan = new Scanner(System.in);
         
         for (int i = 0; i < 5; i++) {
@@ -16,11 +18,10 @@ public class Yahtzee {
         }
 
         
-        System.out.println("How many players are playing today?");
+        System.out.println("How many players are participating?");
         
         //While loop used to validate user input for player count
         while (true) {
-        	int playerCount = 0;
         	boolean isNumber = true;
         	
         	try {
@@ -57,14 +58,38 @@ public class Yahtzee {
         	
             
            
-        }
-      
-        
+        }   
         
         for (boolean b : players) {
             System.out.println(b);
         }
+        
+        //Create Scorecards for every player
 
+        //Loop 13 times - only 13 turns are possible in a game of Yahtzee
+        for (int t = 1; t <=13; t++) {
+        
+        	//Loop for however many players there are
+        	for (int p = 1; p <= playerCount; p++) {
+        			
+        		//Loop up to 3 times, or break if they save all 5 dice
+        		for(int i = 1; i <= 3; i++) {
+        			
+        			//Rolls the unsaved dice
+        			for (int s = 0; s < savedDice.length; s++) {
+        				if (savedDice[s] == true) {
+        					diceArray[s].Roll();
+        				}
+        			}
+        		}
+        			
+        		//Have player choose score to keep or put a 0 somewhere
+        	}
+        	
+        }
+        
+        //Count up scores, determine winner
+        
 		/* ------------------------------------------- */
 		/*          THIS SECTION IS FOR TESTING        */
 		
@@ -90,6 +115,7 @@ public class Yahtzee {
     //Methods
 
     private static boolean[] ChooseDice(boolean[] boolArray) {
+    	
         //Initialization of variables
     	Scanner scan = new Scanner(System.in);
         boolean illegal = true;
@@ -154,4 +180,7 @@ public class Yahtzee {
         
         return boolArray;
     }
+
+    
 }
+
