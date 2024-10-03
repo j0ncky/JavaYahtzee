@@ -75,7 +75,7 @@ public class Yahtzee {
 //START OF GAME
         
         //Loop 13 times - only 13 turns are possible in a game of Yahtzee
-        for (int t = 1; t <= 13; t++) {
+        for (int t = 1; t <= 3; t++) {
         System.out.println("TURN " + t);
         	
         	//Loop for however many players there are
@@ -133,13 +133,16 @@ public class Yahtzee {
         		//Saves chosen score to players scorecard
         		scorecards[p].saveScoreSelection(diceArray, categorySelection, zeroOverScore);
         		
-        		System.out.println(zeroOverScore);
-        		System.out.println(categorySelection);
         	}
         	
         }
         
         System.out.println("And that's the end of the game!!!\n\n\n");
+        
+        //Apply the upper section bonus if earned
+        for (int i = 0; i < playerCount; i++) {
+        	scorecards[i].applyUpperBonus(scorecards[i].upperSectionBonusObtained);
+        }
         
         //Display everyone's total score
         for (int i = 0; i < scorecards.length; i++) {
@@ -166,22 +169,8 @@ public class Yahtzee {
         	}
         		
         }
-        
-/* ------------------------------------------- */
-/*          THIS SECTION IS FOR TESTING        */
-
-        diceArray[0].Roll();
-        System.out.println(diceArray[0].value);
-
-        savedDice = chooseDice(savedDice, scan);
-        
-        //Display savedDice array for testing
-        for (int i = 0; i < savedDice.length; i++) {
-                System.out.println(savedDice[i]);
-        }
-
-        
-/* ------------------------------------------- */
+       
+        System.out.println("\nCongratulations Player " + (winningPlayer + 1) + ", you've won the game!!!");
     
         scan.close();
 		        
