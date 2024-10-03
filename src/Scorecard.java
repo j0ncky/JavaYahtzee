@@ -4,20 +4,30 @@ public class Scorecard {
 
 	protected int[] card = new int[13];
 	protected boolean[] possible = new boolean[13];
-	protected boolean yahtzeeBonus = false;
+	protected int totalScore;
+	
+	protected boolean yahtzeeBonusAvailable;
+	protected boolean upperSectionBonusObtained;
+	
+	protected String[] categories = {"Aces", "Twos", "Threes", "Fours", "Fives", "Sixes", 
+			 						 "3 of a Kind", "4 of a Kind", "Full House", "Small Straight", "Large Straight", "Yahtzee", "Chance" };
 	
 	//Constructor
 	public Scorecard() {
 		Arrays.fill(card, -1);
 		Arrays.fill(possible, false);
+		
+		totalScore = 0;
+		
+		yahtzeeBonusAvailable = false;
+		upperSectionBonusObtained = false;
 	}
 	
 	//13 different, long if statements, checking each scoring category with the dice array to see which ones are eligible to be scored
 	public void currentEligibleScores(Dice[] dice) {
 		
-		String[] categories = {"Aces", "Twos", "Threes", "Fours", "Fives", "Sixes", "3 of a Kind", "4 of a Kind", "Full House", "Small Straight", "Large Straight", "Yahtzee", "Chance" };
-		int diceArrayLength = dice.length;
 		int n = 0;
+		Arrays.fill(possible, false);
 		
 		//Aces
 		if (card[n] != -1) {
@@ -140,34 +150,192 @@ public class Scorecard {
 			possible[n] = true;
 		}
 		   	
-		for (int i = 0; i < possible.length; i++) {
-			
-			if (possible[i] == true) {
-				
-				if (i < 9) {
-					System.out.println((i + 1) + "  - " + categories[i]);
-				}
-				else {
-					System.out.println((i + 1) + " - " + categories[i]);
-				}
-				
-			} else if (possible[i] == false && card[i] == -1) {
-				
-				if (i < 9) {
-					System.out.println((i + 1) + "  X " + categories[i]);
-				}
-				else {
-					System.out.println((i + 1) + " X " + categories[i]);
-				}	
-			}
-		}
+		
 		
 	}
 	
-	public void saveScoreSelection(int selection, boolean zero) {
-		//switch statements with selection integer
-		//each case will have an if statement to check if the user wanted to input a zero, and if not it will save the appropriate score.
+	protected int selectedScoreValue(Dice[] dice, int selection) {
+		int score = 0;
 		
+		switch (selection) {
+		case 1: //Aces
+			for (Dice die : dice) {
+				
+				if (die.value == 1) { score += die.value; }
+			}
+			break;
+			
+		case 2:
+			for (Dice die : dice) {
+				if (die.value == 2) { score += die.value; }
+			}
+			break;
+			
+		case 3:
+			for (Dice die : dice) {
+				if (die.value == 3) { score += die.value; }
+			}
+			break;
+		
+		case 4:
+			for (Dice die : dice) {
+				if (die.value == 4) { score += die.value; }
+			}
+			break;
+			
+		case 5:
+			for (Dice die : dice) {
+				if (die.value == 5) { score += die.value; }
+			}
+			break;
+			
+		case 6:
+			for (Dice die : dice) {
+				if (die.value == 6) { score += die.value; }
+			}
+			break;
+			
+		case 7:
+			for (Dice die : dice) {
+				score += die.value;
+			}
+			break;
+			
+		case 8:
+			for (Dice die : dice) {
+				score += die.value;
+			}
+			break;
+			
+		case 9:
+			score += 25;
+			break;
+			
+		case 10:
+			score += 30;
+			break;
+			
+		case 11:
+			score += 40;
+			break;
+			
+		case 12:
+			if (!yahtzeeBonusAvailable) {
+				yahtzeeBonusAvailable = true;
+				score += 50;
+			}
+			else if (yahtzeeBonusAvailable) {
+				score += 100;
+			}
+			break;
+			
+		case 13:
+			for (Dice die : dice) {
+				score += die.value;
+			}
+			break;
+			
+		}
+		
+		return score;
+	}
+	
+	protected void saveScoreSelection(Dice[] dice, int selection, boolean zero) {
+		//Only does calculation of selected score category
+		//If statements in case the score to be recorded is zero
+		int score = -1;
+		
+		if (zero) { score = 0; }
+		
+		else {
+			
+			switch (selection) {
+			case 1: //Aces
+				for (Dice die : dice) {
+					if (die.value == 1) { score += 1; }
+				}
+				break;
+				
+			case 2:
+				for (Dice die : dice) {
+					if (die.value == 2) { score += 2; }
+				}
+				break;
+				
+			case 3:
+				for (Dice die : dice) {
+					if (die.value == 3) { score += 3; }
+				}
+				break;
+			
+			case 4:
+				for (Dice die : dice) {
+					if (die.value == 4) { score += 4; }
+				}
+				break;
+				
+			case 5:
+				for (Dice die : dice) {
+					if (die.value == 5) { score += 5; }
+				}
+				break;
+				
+			case 6:
+				for (Dice die : dice) {
+					if (die.value == 6) { score += 6; }
+				}
+				break;
+				
+			case 7:
+				for (Dice die : dice) {
+					score += die.value;
+				}
+				break;
+				
+			case 8:
+				for (Dice die : dice) {
+					score += die.value;
+				}
+				break;
+				
+			case 9:
+				score += 25;
+				break;
+				
+			case 10:
+				score += 30;
+				break;
+				
+			case 11:
+				score += 40;
+				break;
+				
+			case 12:
+				if (!yahtzeeBonusAvailable) {
+					yahtzeeBonusAvailable = true;
+					score += 50;
+				}
+				else if (yahtzeeBonusAvailable) {
+					score += 100;
+				}
+				break;
+				
+			case 13:
+				for (Dice die : dice) {
+					score += die.value;
+				}
+				break;
+				
+			}
+			
+		}
+		
+		
+		card[selection - 1] = score;
+		
+		if ((card[0] + card[1] + card[2] + card[3] + card[4] + card[5]) >= 63) {
+			upperSectionBonusObtained = true;
+		}
 	}
 	
 	public void displayCurrentScores() {
@@ -196,10 +364,22 @@ public class Scorecard {
 	}
 	
 	public int totalScore() {
-		int total = 0;
+		totalScore = 0;
 		for (int i = 0; i < card.length; i++) {
-			total += card[i];
+			
+			if (card[i] == -1) 
+				{ totalScore += 0; }
+			else 
+				{ totalScore += card[i]; }
+			
 		}
-		return total;
+		
+		return totalScore;
+	}
+	
+	public void applyUpperBonus(boolean obtained) {
+		if (obtained) {
+			totalScore += 35;
+		}
 	}
 }

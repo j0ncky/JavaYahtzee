@@ -3,18 +3,18 @@ import java.util.Random;
 
 public class Yahtzee {
     
+	protected static Dice[] diceArray = new Dice[5];
+	
 	//Main
 	public static void main(String[] args) {
         
 		//Initialization of variables needed from beginning of game
-		boolean[] players = new boolean[6];
         int playerCount = 0;
         
         Scorecard[] scorecards;
         int categorySelection = -1;
         boolean zeroOverScore = false;
         
-        Dice[] diceArray = new Dice[5];
         boolean[] savedDice = new boolean[5];
         
         Scanner scan = new Scanner(System.in);
@@ -72,6 +72,7 @@ public class Yahtzee {
         }
         
 /*------------------------------------------------------------------------------------------------------------------*/
+//START OF GAME
         
         //Loop 13 times - only 13 turns are possible in a game of Yahtzee
         for (int t = 1; t <= 13; t++) {
@@ -107,27 +108,30 @@ public class Yahtzee {
         				}
         			}
         			
-        			SelectionSort(diceArray);
-        			DisplayDiceValues(diceArray);
+        			selectionSort(diceArray);
+        			displayDiceValues(diceArray);
         			
         			
-        			if (i != 3) { ChooseDice(savedDice, scan); }
+        			if (i != 3) { chooseDice(savedDice, scan); }
         		}
         		
-        		System.out.println("\nHere are you're scoring options. X means you can only put a zero.");
+        		System.out.println("\nHere are your scoring options. X means only zero is allowed.");
       
-        		//Display possible scores based on dice array
+        		//Display possible scoring categories based on dice array
         		scorecards[p].currentEligibleScores(diceArray);
+        		
+        		//Display score value for eligible categories
+        		displayScoreValues(p, scorecards);
         		
         		//Ask for player input on which score to keep	
         		System.out.println("Please select which score you'd like to register");
         		
         		//Validates user input of score category and saves their selection
-        		categorySelection = ChooseScore(p, scorecards, scan);
-        		zeroOverScore = ZeroOrDice(p, scorecards, categorySelection, scan);
+        		categorySelection = chooseScore(p, scorecards, scan);
+        		zeroOverScore = zeroOrDice(p, scorecards, categorySelection, scan);
         		
         		//Saves chosen score to players scorecard
-        		scorecards[p].saveScoreSelection(categorySelection, zeroOverScore);
+        		scorecards[p].saveScoreSelection(diceArray, categorySelection, zeroOverScore);
         		
         		System.out.println(zeroOverScore);
         		System.out.println(categorySelection);
@@ -169,7 +173,7 @@ public class Yahtzee {
         diceArray[0].Roll();
         System.out.println(diceArray[0].value);
 
-        savedDice = ChooseDice(savedDice, scan);
+        savedDice = chooseDice(savedDice, scan);
         
         //Display savedDice array for testing
         for (int i = 0; i < savedDice.length; i++) {
@@ -190,7 +194,7 @@ public class Yahtzee {
     //Methods
 
 	//Handles players saving dice during their turn
-    private static boolean[] ChooseDice(boolean[] boolArray, Scanner scanner) {
+    private static boolean[] chooseDice(boolean[] boolArray, Scanner scanner) {
     	
         //Initialization of variables
         boolean illegal = true;
@@ -266,7 +270,7 @@ public class Yahtzee {
     }
     
     //Handles the player selecting a scoring category
-    private static int ChooseScore(int player, Scorecard[] scorecards, Scanner scan) {
+    private static int chooseScore(int player, Scorecard[] scorecards, Scanner scan) {
     	boolean isValid = true;
     	int selection = -1;
 		do {
@@ -288,16 +292,24 @@ public class Yahtzee {
 				//Validates it's a correct category number from 1 to 13
 				if (selection >= 1 && selection <= 13) {
 					
-					//Validates if the selection is able to be scored with dice and/or with a zero
-					if(scorecards[player].possible[selection] == true || scorecards[player].card[selection] == -1) {
-    					isValid = true;
-    					return selection;
-    				}
+					//Validates that the player hasn't selected this category yet
+					if (scorecards[player].card[selection - 1] == -1) {
+						
+						//Validates if the selection is able to be scored with dice and/or with a zero
+						if(scorecards[player].possible[selection - 1] == true || scorecards[player].card[selection - 1] == -1) {
+	    					isValid = true;
+	    					return selection;
+	    				}
+						else {
+							System.out.println("Please only select one of the available categories.");
+							isValid = false;
+						}
+						
+					}
 					else {
-						System.out.println("Please only select one of the available categories.");
+						System.out.println("Please choose a category you haven't filled in yet.");
 						isValid = false;
 					}
-					
 				}
 				else {
 					System.out.println("Please only enter a number from 1 to 13");
@@ -313,14 +325,13 @@ public class Yahtzee {
     }
     
     //Sets boolean to determine if they are scoring with a zero or with their dice
-    private static boolean ZeroOrDice(int player, Scorecard[] scorecard, int selection, Scanner scan) {
+    private static boolean zeroOrDice(int player, Scorecard[] scorecard, int selection, Scanner scan) {
     	
     	//If player can choose either the eligible score or zero, allows them to choose.  Otherwise, default to zero
 		boolean isZero;
 		
 		//Has choice
-		
-		if (scorecard[player].possible[selection] == true) {
+		if (scorecard[player].possible[selection - 1] == true) {
 			
 			System.out.println("Would you like to record your score from the dice roll? ('No' means recording a zero instead) \n[y/n]");
 			
@@ -351,7 +362,7 @@ public class Yahtzee {
     }
     
     //Selection sort for an array, specifically for an array of Dice
-    private static void SelectionSort(Dice[] arr) {
+    private static void selectionSort(Dice[] arr) {
     	
     	for (int j = 1; j < arr.length; ++j) {
     		
@@ -367,7 +378,7 @@ public class Yahtzee {
     	}
     }
     
-    private static void DisplayDiceValues(Dice[] arr) {
+    private static void displayDiceValues(Dice[] arr) {
     	
     	System.out.println("Your dice values are now:");
 		for (int i = 0; i < 5; i++) {
@@ -375,5 +386,30 @@ public class Yahtzee {
 		}
     }
     
+    private static void displayScoreValues(int player, Scorecard[] scorecard) {
+    	
+    	for (int i = 0; i < scorecard[player].possible.length; i++) {
+			
+			if (scorecard[player].possible[i] == true) {
+				
+				if (i < 9) {
+					System.out.println((i + 1) + "   -  (" + scorecard[player].selectedScoreValue(diceArray, i + 1) + ")\t" + scorecard[player].categories[i]);
+				}
+				else {
+					System.out.println((i + 1) + "  -  (" + scorecard[player].selectedScoreValue(diceArray, i + 1) + ")\t" + scorecard[player].categories[i]);
+				}
+				
+			} else if (scorecard[player].possible[i] == false && scorecard[player].card[i] == -1) {
+				
+				if (i < 9) {
+					System.out.println((i + 1) + "   -   X \t" + scorecard[player].categories[i]);
+				}
+				else {
+					System.out.println((i + 1) + "  -   X \t" + scorecard[player].categories[i]);
+				}	
+			}
+		}
+    	
+    }
+    
 }
-
