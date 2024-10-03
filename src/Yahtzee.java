@@ -46,8 +46,8 @@ public class Yahtzee {
     		        	throw new ArithmeticException("No more than 6 players can play.");
     		        }
     		        
-    		        if (playerCount < 2) {
-    		        	throw new ArithmeticException("At least 2 players are required.");
+    		        if (playerCount < 1) {
+    		        	throw new ArithmeticException("At least 1 player is required.");
     		        }
     		        
     		        break;

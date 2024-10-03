@@ -336,6 +336,8 @@ public class Scorecard {
 		if ((card[0] + card[1] + card[2] + card[3] + card[4] + card[5]) >= 63) {
 			upperSectionBonusObtained = true;
 		}
+		
+		System.out.println("Score recorded\n");
 	}
 	
 	public void displayCurrentScores() {
