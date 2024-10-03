@@ -20,7 +20,7 @@ public class Yahtzee {
         
         System.out.println("How many players are participating?");
         
-        //While loop used to validate user input for player count
+        //While loop used to validate user input for player count, and ask for it again if it's not valid
         while (true) {
         	boolean isNumber = true;
         	
@@ -35,8 +35,8 @@ public class Yahtzee {
         	if (isNumber == true) {
         		
         		try {
-    		        for (int i = 0; i < playerCount; i++) {
-    		            players[i] = true;
+    		        if (playerCount > 6) {
+    		        	throw new ArithmeticException("No more than 6 players can play.");
     		        }
     		        
     		        if (playerCount < 2) {
@@ -60,32 +60,32 @@ public class Yahtzee {
            
         }   
         
-        for (boolean b : players) {
-            System.out.println(b);
-        }
+        //Instructions on how to save dice
+        System.out.println("When asked which dice to save, please enter the die numbers you want \nto keep separated by a space, or just press Enter to save no dice.");
         
         //Create Scorecards for every player
-
+        scorecards = new Scorecard[playerCount];
+        
         //Loop 13 times - only 13 turns are possible in a game of Yahtzee
         for (int t = 1; t <= 13; t++) {
-        System.out.println("Turn " + t);
+        System.out.println("TURN " + t);
         	
         	//Loop for however many players there are
         	for (int p = 1; p <= playerCount; p++) {
+        		System.out.println("Player " + p + ", it is your turn");
         			
         		//Loop up to 3 times, or break if they save all 5 dice
         		for(int i = 1; i <= 3; i++) {
         			
         			//If this is the first roll of the turn for this player, makes sure no dice are saved
-        			//Also, ends the rolling if the player saves all 5 die
         			if (i == 1) {
         				for (int j = 0; j < savedDice.length; j++) {
         					savedDice[j] = false;
-        					System.out.println("reset");
+/* FOR TESTING */			System.out.println("reset"); 
         				}
         			}
         			
-        			//TODO: End the rolling if the player has saved all 5 dice
+        			//TODO: End the rolling if the player has saved all 5 dice-
         			
         			//Rolls the unsaved dice
         			for (int s = 0; s < savedDice.length; s++) {
@@ -94,22 +94,22 @@ public class Yahtzee {
         				}
         			}
         			
-        			//SortDiceArray(diceArray);
+        			SortDiceArray(diceArray);
         			DisplayDiceValues(diceArray);
         			
         			
-        			if (i != 3) {
-        				ChooseDice(savedDice, scan);
-        			}
+        			if (i != 3) { ChooseDice(savedDice, scan); }
         		}
         			
         		//Have player choose score to keep or put a 0 somewhere
+        		
+        		
         	}
         	
         }
         
 //Count up scores, determine winner
-
+        
 /* ------------------------------------------- */
 /*          THIS SECTION IS FOR TESTING        */
 
@@ -163,6 +163,13 @@ public class Yahtzee {
             	boolArray[i] = false;
             }
             
+            //If user input is empty, don't save any dice and break loop
+            if (input.isEmpty()) {
+            	for (int i = 0; i < boolArray.length; i++) {
+            		boolArray[i] = false;
+            	}
+            }
+            
             //Try statement catches any numbers less than 1 or greater than 5, due to the array size constraint
             try {
             	//Takes user input numbers of 1-5 and sets those corresponding dice in boolArray to be true (saved)
@@ -172,7 +179,7 @@ public class Yahtzee {
                 }
             }
             catch (Exception e){
-            	System.out.println("Please only enter numbers from 1 to 5");
+            	System.out.println("Please only enter numbers from 1 to 5, or press Enter to save none.");
             	illegal = true;
             	outOfBounds = true;
             }
@@ -209,6 +216,7 @@ public class Yahtzee {
     		int i= j - 1;
     		while ((i >= 0) && (arr[i].value >= temp)) {
     			arr[i+1].value = arr[i].value;
+    			i--;
     		}
     		
     		arr[i+1].value = temp;
