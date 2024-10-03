@@ -1,16 +1,17 @@
 import java.util.Scanner;
+import java.util.Random;
 
 public class Yahtzee {
     
 	//Main
 	public static void main(String[] args) {
         
-		//Initialization of variables
+		//Initialization of variables needed from beginning of game
 		boolean[] players = new boolean[6];
         int playerCount = 0;
+        Scorecard[] scorecards;
         Dice[] diceArray = new Dice[5];
         boolean[] savedDice = new boolean[5];
-        Scorecard[] scorecards;
         Scanner scan = new Scanner(System.in);
         
         for (int i = 0; i < 5; i++) {
@@ -63,17 +64,24 @@ public class Yahtzee {
         //Instructions on how to save dice
         System.out.println("When asked which dice to save, please enter the die numbers you want \nto keep separated by a space, or just press Enter to save no dice.");
         
-        //Create Scorecards for every player
+        //Create Scorecards for every player as well as initialize them
         scorecards = new Scorecard[playerCount];
+        for (int i = 0; i < scorecards.length; i++) {
+        	scorecards[i] = new Scorecard();
+        }
         
         //Loop 13 times - only 13 turns are possible in a game of Yahtzee
         for (int t = 1; t <= 13; t++) {
         System.out.println("TURN " + t);
         	
         	//Loop for however many players there are
-        	for (int p = 1; p <= playerCount; p++) {
-        		System.out.println("Player " + p + ", it is your turn");
-        			
+        	for (int p = 0 ; p < playerCount; p++) {
+        		System.out.println("Player " + (p + 1) + ", it is your turn");
+        		
+        		//Display user's current score
+        		scorecards[p].displayCurrentScores();
+        		System.out.println(scorecards[p].totalScore());
+        		
         		//Loop up to 3 times, or break if they save all 5 dice
         		for(int i = 1; i <= 3; i++) {
         			
@@ -94,21 +102,55 @@ public class Yahtzee {
         				}
         			}
         			
-        			SortDiceArray(diceArray);
+        			SelectionSort(diceArray);
         			DisplayDiceValues(diceArray);
         			
         			
         			if (i != 3) { ChooseDice(savedDice, scan); }
         		}
-        			
-        		//Have player choose score to keep or put a 0 somewhere
+      
+        		//Display possible scores based on dice array
+        		scorecards[p].currentEligibleScores(diceArray);
+        		
+        		//Ask for player input on which score to keep; loop until they select an eligible score
+        		
+        		
+        		
+        		
+        		
         		
         		
         	}
         	
         }
         
-//Count up scores, determine winner
+        System.out.println("And that's the end of the game!!!\n\n\n");
+        
+        //Display everyone's total score
+        for (int i = 0; i < scorecards.length; i++) {
+        	System.out.println("Player " + (i + 1) + ", your score is " + scorecards[i].totalScore());
+        }
+        
+        //Determine winner    
+        int winningPlayer = 0;
+
+        for (int i = 1; i < scorecards.length; i++) {
+        	
+        	//Just in case of a tie, "flips a coin" for who has the higher score. Highly unlikely to happen.
+        	if (scorecards[i].totalScore() == scorecards[winningPlayer].totalScore()) {
+        		int coin;
+        		Random rand = new Random();
+                coin = rand.nextInt(1000) % 2;
+                
+                if (coin == 0) {
+                	winningPlayer = i;
+                }
+        	} 
+        	else if (scorecards[i].totalScore() > scorecards[winningPlayer].totalScore()) {
+        		winningPlayer = i;
+        	}
+        		
+        }
         
 /* ------------------------------------------- */
 /*          THIS SECTION IS FOR TESTING        */
@@ -136,6 +178,7 @@ public class Yahtzee {
 	
     //Methods
 
+	//Handles players saving dice during their turn
     private static boolean[] ChooseDice(boolean[] boolArray, Scanner scanner) {
     	
         //Initialization of variables
@@ -207,21 +250,21 @@ public class Yahtzee {
         return boolArray;
     }
     
-    //Selection sort for an array of Dice
-    private static void SortDiceArray(Dice[] arr) {
+    //Selection sort for an array, mainly used for the diceArray
+    private static void SelectionSort(Dice[] arr) {
     	
     	for (int j = 1; j < arr.length; j++) {
     		
     		int temp = arr[j].value;
-    		int i= j - 1;
+    		int i = j - 1;
+    		
     		while ((i >= 0) && (arr[i].value >= temp)) {
-    			arr[i+1].value = arr[i].value;
+    			arr[i + 1].value = arr[i].value;
     			i--;
     		}
     		
-    		arr[i+1].value = temp;
+    		arr[i + 1].value = temp;
     	}
-    	
     }
     
     private static void DisplayDiceValues(Dice[] arr) {
