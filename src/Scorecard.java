@@ -15,6 +15,7 @@ public class Scorecard {
 	//13 different, long if statements, checking each scoring category with the dice array to see which ones are eligible to be scored
 	public void currentEligibleScores(Dice[] dice) {
 		
+		String[] categories = {"Aces", "Twos", "Threes", "Fours", "Fives", "Sixes", "3 of a Kind", "4 of a Kind", "Full House", "Small Straight", "Large Straight", "Yahtzee", "Chance" };
 		int diceArrayLength = dice.length;
 		int n = 0;
 		
@@ -142,9 +143,22 @@ public class Scorecard {
 		for (int i = 0; i < possible.length; i++) {
 			
 			if (possible[i] == true) {
-				System.out.println(i);
+				
+				if (i < 9) {
+					System.out.println((i + 1) + "  - " + categories[i]);
+				}
+				else {
+					System.out.println((i + 1) + " - " + categories[i]);
+				}
+				
 			} else if (possible[i] == false && card[i] == -1) {
-				System.out.println(i + "\tx");
+				
+				if (i < 9) {
+					System.out.println((i + 1) + "  X " + categories[i]);
+				}
+				else {
+					System.out.println((i + 1) + " X " + categories[i]);
+				}	
 			}
 		}
 		

@@ -113,6 +113,8 @@ public class Yahtzee {
         			
         			if (i != 3) { ChooseDice(savedDice, scan); }
         		}
+        		
+        		System.out.println("\nHere are you're scoring options. X means you can only put a zero.");
       
         		//Display possible scores based on dice array
         		scorecards[p].currentEligibleScores(diceArray);
