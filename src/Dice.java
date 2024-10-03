@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class Dice {
     
-    int value;
+    protected int value;
 
     public void Roll() {
         Random rand = new Random();

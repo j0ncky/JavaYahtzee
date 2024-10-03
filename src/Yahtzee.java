@@ -9,10 +9,14 @@ public class Yahtzee {
 		//Initialization of variables needed from beginning of game
 		boolean[] players = new boolean[6];
         int playerCount = 0;
+        
         Scorecard[] scorecards;
-        int categorySelection;
+        int categorySelection = -1;
+        boolean zeroOverScore = false;
+        
         Dice[] diceArray = new Dice[5];
         boolean[] savedDice = new boolean[5];
+        
         Scanner scan = new Scanner(System.in);
         
         for (int i = 0; i < 5; i++) {
@@ -50,11 +54,6 @@ public class Yahtzee {
                 }
                 catch (Exception e) {
     			    System.out.println("Please enter a number from 2 to 6.");
-    			    
-    			    for (int i = 0; i < players.length; i++) {
-    			    	players[i] = false;
-    			    }
-    			    
                 }
         		
         	}
@@ -118,12 +117,18 @@ public class Yahtzee {
         		//Display possible scores based on dice array
         		scorecards[p].currentEligibleScores(diceArray);
         		
-        		//Ask for player input on which score to keep; loop until they select an eligible score
-        		
+        		//Ask for player input on which score to keep	
         		System.out.println("Please select which score you'd like to register");
         		
+        		//Validates user input of score category and saves their selection
+        		categorySelection = ChooseScore(p, scorecards, scan);
+        		zeroOverScore = ZeroOrDice(p, scorecards, categorySelection, scan);
         		
+        		//Saves chosen score to players scorecard
+        		scorecards[p].saveScoreSelection(categorySelection, zeroOverScore);
         		
+        		System.out.println(zeroOverScore);
+        		System.out.println(categorySelection);
         	}
         	
         }
@@ -258,7 +263,92 @@ public class Yahtzee {
         return boolArray;
     }
     
-    //Selection sort for an array, mainly used for the diceArray
+    //Handles the player selecting a scoring category
+    private static int ChooseScore(int player, Scorecard[] scorecards, Scanner scan) {
+    	boolean isValid = true;
+    	int selection = -1;
+		do {
+					
+			String userInput = scan.nextLine();
+			
+			//Validates it's an integer
+			try {
+				selection = Integer.parseInt(userInput);
+				isValid = true;
+			}
+			catch (NumberFormatException e) {
+				System.out.println("Please enter the number of one of the available categories.");
+				isValid = false;
+			}
+			
+			if (isValid) {
+				
+				//Validates it's a correct category number from 1 to 13
+				if (selection >= 1 && selection <= 13) {
+					
+					//Validates if the selection is able to be scored with dice and/or with a zero
+					if(scorecards[player].possible[selection] == true || scorecards[player].card[selection] == -1) {
+    					isValid = true;
+    					return selection;
+    				}
+					else {
+						System.out.println("Please only select one of the available categories.");
+						isValid = false;
+					}
+					
+				}
+				else {
+					System.out.println("Please only enter a number from 1 to 13");
+					isValid = false;
+				}
+		
+			}
+			
+		} while (isValid == false);
+		
+		//In case something weird happens
+		return -1;
+    }
+    
+    //Sets boolean to determine if they are scoring with a zero or with their dice
+    private static boolean ZeroOrDice(int player, Scorecard[] scorecard, int selection, Scanner scan) {
+    	
+    	//If player can choose either the eligible score or zero, allows them to choose.  Otherwise, default to zero
+		boolean isZero;
+		
+		//Has choice
+		
+		if (scorecard[player].possible[selection] == true) {
+			
+			System.out.println("Would you like to record your score from the dice roll? ('No' means recording a zero instead) \n[y/n]");
+			
+			while (true) {
+				String response;
+				response = scan.nextLine();
+				
+				if (response.equals("y")) {
+					isZero = false;
+					break;
+				}
+				else if (response.equals("n")) {
+					isZero = true;
+					break;
+				}
+				else {
+					System.out.println("Please enter a valid response");
+				}
+			}
+		}
+		//Has no choice
+		else {
+			System.out.println("Only zero is available");
+			isZero = true;
+		}
+		
+		return isZero;
+    }
+    
+    //Selection sort for an array, specifically for an array of Dice
     private static void SelectionSort(Dice[] arr) {
     	
     	for (int j = 1; j < arr.length; ++j) {
