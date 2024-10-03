@@ -4,6 +4,7 @@ public class Scorecard {
 
 	int[] card = new int[13];
 	boolean[] possible = new boolean[13];
+	boolean yahtzeeBonus = false;
 	
 	//Constructor
 	public Scorecard() {
@@ -11,71 +12,143 @@ public class Scorecard {
 		Arrays.fill(possible, false);
 	}
 	
-	//13 different if statements, checking each scoring category with the dice array to see which ones are eligible to be scored
+	//13 different, long if statements, checking each scoring category with the dice array to see which ones are eligible to be scored
 	public void currentEligibleScores(Dice[] dice) {
 		int aces, twos, threes, fours, fives, sixes, threeOfAKind, fourOfAKind, fullHouse, smallStraight, largeStraight, yahtzee, chance;
-		int arrayLength = dice.length;
+		int diceArrayLength = dice.length;
+		int n = 0;
 		
 		//Aces
-		if (dice[0].value == 1 || dice[1].value == 1 || dice[2].value == 1 || dice[3].value == 1 || dice[4].value == 1) {
-			aces = 0;
-			for (int i = 0; i < arrayLength; i++) {
-				if (dice[i].value == 1) {
-					aces++;
-				}
-			}
+		if (card[n] != -1) {
+			possible[n] = false;
 		}
+		else if (dice[0].value == 1 || dice[1].value == 1 || dice[2].value == 1 || dice[3].value == 1 || dice[4].value == 1) {
+			possible[n] = true;
+		}
+		n++;
 		
 		//Twos
-		if (dice[0].value == 2 || dice[1].value == 2 || dice[2].value == 2 || dice[3].value == 2 || dice[4].value == 2) {
-			aces = 0;
-			for (int i = 0; i < arrayLength; i++) {
-				if (dice[i].value == 2) {
-					aces += 2;
-				}
-			}
+		if (card[n] != -1) {
+			possible[n] = false;
 		}
+		else if (dice[0].value == 2 || dice[1].value == 2 || dice[2].value == 2 || dice[3].value == 2 || dice[4].value == 2) {
+			possible[n] = true;
+		}
+		n++;
 		
 		//Threes
-		if (dice[0].value == 3 || dice[1].value == 3 || dice[2].value == 3 || dice[3].value == 3 || dice[4].value == 3) {
-			aces = 0;
-			for (int i = 0; i < arrayLength; i++) {
-				if (dice[i].value == 3) {
-					aces += 3;
-				}
-			}
+		if (card[n] != -1) {
+			possible[n] = false;
 		}
+		else if (dice[0].value == 3 || dice[1].value == 3 || dice[2].value == 3 || dice[3].value == 3 || dice[4].value == 3) {
+			possible[n] = true;
+		}
+		n++;
 		
 		//Fours
-		if (dice[0].value == 4 || dice[1].value == 4 || dice[2].value == 4 || dice[3].value == 4 || dice[4].value == 4) {
-			aces = 0;
-			for (int i = 0; i < arrayLength; i++) {
-				if (dice[i].value == 4) {
-					aces += 4;
-				}
-			}
+		if (card[n] != -1) {
+			possible[n] = false;
 		}
+		else if (dice[0].value == 4 || dice[1].value == 4 || dice[2].value == 4 || dice[3].value == 4 || dice[4].value == 4) {
+			possible[n] = true;
+		}
+		n++;
 		
 		//Fives
-		if (dice[0].value == 5 || dice[1].value == 5 || dice[2].value == 5 || dice[3].value == 5 || dice[4].value == 5) {
-			aces = 0;
-			for (int i = 0; i < arrayLength; i++) {
-				if (dice[i].value == 5) {
-					aces += 5;
-				}
-			}
+		if (card[n] != -1) {
+			possible[n] = false;
 		}
+		else if (dice[0].value == 5 || dice[1].value == 5 || dice[2].value == 5 || dice[3].value == 5 || dice[4].value == 5) {
+			possible[n] = true;
+		}
+		n++;
 		
 		//Sixes
-		if (dice[0].value == 6 || dice[1].value == 6 || dice[2].value == 6 || dice[3].value == 6 || dice[4].value == 6) {
-			aces = 0;
-			for (int i = 0; i < arrayLength; i++) {
-				if (dice[i].value == 6) {
-					aces += 6;
-				}
+		if (card[n] != -1) {
+			possible[n] = false;
+		}
+		else if (dice[0].value == 6 || dice[1].value == 6 || dice[2].value == 6 || dice[3].value == 6 || dice[4].value == 6) {
+			possible[n] = true;
+		}
+		n++;
+		
+		//3 of a kind
+		if (card[n] != -1) {
+			possible[n] = false;
+		}
+		else if (((dice[0].value == dice[1].value) && (dice[1].value == dice[2].value)) 
+		      || ((dice[1].value == dice[2].value) && (dice[2].value == dice[3].value))
+		      || ((dice[2].value == dice[3].value) && (dice[3].value == dice[4].value))) {
+			possible[n] = true;
+		}
+		n++;
+		
+		//4 of a kind
+		if (card[n] != -1) {
+			possible[n] = false;
+		}
+		else if (((dice[0].value == dice[1].value) && (dice[1].value == dice[2].value) && (dice[2].value == dice[3].value))
+		       || (dice[1].value == dice[2].value) && (dice[2].value == dice[3].value) && (dice[3].value == dice[4].value)) {
+			possible[n] = true;
+		}
+		n++;
+		
+		//Full house
+		if (card[n] != -1) {
+			possible[n] = false;
+		}
+		else if (((dice[0].value == dice[1].value) && (dice[1].value == dice[2].value)) && (dice[3].value == dice[4].value)
+		       || (dice[0].value == dice[1].value) && ((dice[2].value == dice[3].value) && (dice[3].value == dice[4].value))) {
+			possible[n] = true;
+		}
+		n++;
+			
+		//Small straight
+		if (card[n] != -1) {
+			possible[n] = false;
+		}
+		else if (((dice[0].value < dice[1].value) && (dice[1].value < dice[2].value) && (dice[2].value < dice[3].value))
+		      || ((dice[1].value < dice[2].value) && (dice[2].value < dice[3].value) && (dice[3].value < dice[4].value))) {
+			possible[n] = true;
+		}
+		n++;
+		
+		//Large straight
+		if (card[n] != -1) {
+			possible[n] = false;
+		}
+		else if ((dice[0].value + 1 == dice[1].value) && (dice[1].value + 1 == dice[2].value) && (dice[2].value + 1 == dice[3].value) && (dice[3].value + 1 == dice[4].value)) {
+			possible[n] = true;
+		}
+		n++;
+		
+		//Yahtzee
+		if (card[n] == 0) {
+			possible[n] = false;
+		}
+		else if ((dice[0].value == dice[1].value) && (dice[1].value == dice[2].value) && (dice[2].value == dice[3].value) && (dice[3].value == dice[4].value)) { 
+			possible[n] = true;
+		}
+		n++;
+		
+		//Chance
+		if (card[n] != -1) {
+			possible[n] = false;
+		}
+		else {
+			possible[n] = true;
+		}
+		   	
+		for (int i = 0; i < possible.length; i++) {
+			if (possible[i] == true) {
+				System.out.println(i + " ");
 			}
 		}
 		
+	}
+	
+	public void saveScoreSelection(int selection, boolean zero) {
+		//switch statements with selection integer
 		
 	}
 	

@@ -10,6 +10,7 @@ public class Yahtzee {
 		boolean[] players = new boolean[6];
         int playerCount = 0;
         Scorecard[] scorecards;
+        int categorySelection;
         Dice[] diceArray = new Dice[5];
         boolean[] savedDice = new boolean[5];
         Scanner scan = new Scanner(System.in);
@@ -18,6 +19,7 @@ public class Yahtzee {
             diceArray[i] = new Dice();
         }
 
+/*------------------------------------------------------------------------------------------------------------------*/
         
         System.out.println("How many players are participating?");
         
@@ -70,6 +72,8 @@ public class Yahtzee {
         	scorecards[i] = new Scorecard();
         }
         
+/*------------------------------------------------------------------------------------------------------------------*/
+        
         //Loop 13 times - only 13 turns are possible in a game of Yahtzee
         for (int t = 1; t <= 13; t++) {
         System.out.println("TURN " + t);
@@ -78,9 +82,8 @@ public class Yahtzee {
         	for (int p = 0 ; p < playerCount; p++) {
         		System.out.println("Player " + (p + 1) + ", it is your turn");
         		
-        		//Display user's current score
+        		//Display current player's scorecard
         		scorecards[p].displayCurrentScores();
-        		System.out.println(scorecards[p].totalScore());
         		
         		//Loop up to 3 times, or break if they save all 5 dice
         		for(int i = 1; i <= 3; i++) {
@@ -89,11 +92,14 @@ public class Yahtzee {
         			if (i == 1) {
         				for (int j = 0; j < savedDice.length; j++) {
         					savedDice[j] = false;
-/* FOR TESTING */			System.out.println("reset"); 
+        					//System.out.println("reset"); 
         				}
         			}
         			
-        			//TODO: End the rolling if the player has saved all 5 dice-
+        			//End the rolling if the player has saved all 5 dice.
+        			if (savedDice[0] == true && savedDice[1] == true && savedDice[2] == true && savedDice[3] == true && savedDice[4] == true) {
+        				break;
+        			}
         			
         			//Rolls the unsaved dice
         			for (int s = 0; s < savedDice.length; s++) {
@@ -114,9 +120,7 @@ public class Yahtzee {
         		
         		//Ask for player input on which score to keep; loop until they select an eligible score
         		
-        		
-        		
-        		
+        		System.out.println("Please select which score you'd like to register");
         		
         		
         		
@@ -211,6 +215,7 @@ public class Yahtzee {
             	for (int i = 0; i < boolArray.length; i++) {
             		boolArray[i] = false;
             	}
+            	break;
             }
             
             //Try statement catches any numbers less than 1 or greater than 5, due to the array size constraint
@@ -229,18 +234,21 @@ public class Yahtzee {
             
             if (!outOfBounds) {
 	
-	            //For loop for validating user input
-	            for (int i = 0; i < boolArray.length; i++) {
-	                
-	                //Checks if any numbers are the same
-	                for (int j = boolArrayInt.length - 1; j > i; j--) {
-	                    if (Integer.parseInt(boolArrayInt[i]) == Integer.parseInt(boolArrayInt[j])) {
-	                        illegal = true;
-	                        System.out.println("You cannot save the same die more than once.");
-	                        break;
-	                    }
-	                }
-	                
+            	try {
+            		//For loop for validating user input
+    	            for (int i = 0; i < boolArray.length; i++) {
+    	               
+    	                //Checks if any numbers are the same
+    	                for (int j = boolArrayInt.length - 1; j > i; j--) {
+    	                    if (Integer.parseInt(boolArrayInt[i]) == Integer.parseInt(boolArrayInt[j])) {
+    	                        illegal = true;
+    	                        throw new Exception("Duplicate die saves"); 
+    	                    }
+    	                }
+    	            }
+	            }
+            	catch (Exception e) {
+	            	System.out.println("You cannot save the same die more than once.");
 	            }
 	            
             }
@@ -253,7 +261,7 @@ public class Yahtzee {
     //Selection sort for an array, mainly used for the diceArray
     private static void SelectionSort(Dice[] arr) {
     	
-    	for (int j = 1; j < arr.length; j++) {
+    	for (int j = 1; j < arr.length; ++j) {
     		
     		int temp = arr[j].value;
     		int i = j - 1;
