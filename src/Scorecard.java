@@ -149,7 +149,13 @@ public class Scorecard {
 		else {
 			possible[n] = true;
 		}
-		   	
+		
+		//6 of a kind (6 OF A KIND ONLY)
+
+		
+		//Split (6 OF A KIND ONLY)
+
+		//Giant Straight (6 OF A KIND ONLY)
 		
 		
 	}
