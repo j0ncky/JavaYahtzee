@@ -10,7 +10,8 @@ public class Scorecard {
 	protected boolean upperSectionBonusObtained;
 	
 	protected String[] categories = {"Aces", "Twos", "Threes", "Fours", "Fives", "Sixes", 
-			 						 "3 of a Kind", "4 of a Kind", "Full House", "Small Straight", "Large Straight", "Yahtzee", "Chance" };
+			 						 "3 of a Kind", "4 of a Kind", "Full House", "Small Straight", "Large Straight", "Yahtzee", "Chance",
+									 "6 of a Kind", "Split", "Giant Straight"};
 	
 	//Constructor
 	public Scorecard(int categoryCount) {
@@ -128,8 +129,7 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if (((dice[0].value == dice[1].value) && (dice[1].value == dice[2].value)) && (dice[3].value == dice[4].value)
-		       || (dice[0].value == dice[1].value) && ((dice[2].value == dice[3].value) && (dice[3].value == dice[4].value))) {
+		else if (checkForFullHouse(dice)){
 			possible[n] = true;
 		}
 		n++;
@@ -138,9 +138,12 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if (((dice[0].value + 1 == dice[1].value) && (dice[1].value + 1 == dice[2].value) && (dice[2].value + 1 == dice[3].value))
-		      || ((dice[1].value + 1 == dice[2].value) && (dice[2].value + 1 == dice[3].value) && (dice[3].value + 1 == dice[4].value))) {
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length - 3; i++) {
+				if (dice[i].value + 1 == dice[i+1].value && dice[i+1].value + 1 == dice[i+2].value && dice[i+2].value + 1 == dice[i+3].value) {
+					possible[n] = true;
+				}
+			}
 		}
 		n++;
 		
@@ -148,8 +151,13 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if ((dice[0].value + 1 == dice[1].value) && (dice[1].value + 1 == dice[2].value) && (dice[2].value + 1 == dice[3].value) && (dice[3].value + 1 == dice[4].value)) {
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length - 4; i++) {
+				if (dice[i].value + 1 == dice[i+1].value && dice[i+1].value + 1 == dice[i+2].value 
+				&& dice[i+2].value + 1 == dice[i+3].value && dice[i+3].value + 1 == dice[i+4].value) {
+					possible[n] = true;
+				}
+			}
 		}
 		n++;
 		
@@ -157,11 +165,15 @@ public class Scorecard {
 		if (card[n] == 0) {
 			possible[n] = false;
 		}
-		else if ((dice[0].value == dice[1].value) && (dice[1].value == dice[2].value) && (dice[2].value == dice[3].value) && (dice[3].value == dice[4].value)) { 
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length - 4; i++) {
+				if ((dice[i].value == dice[i+1].value) && (dice[i+1].value == dice[i+2].value) && (dice[i+2].value == dice[i+3].value) && (dice[i+3].value == dice[i+4].value)) {
+					possible[n] = true;
+				}
+			}
 		}
 		n++;
-		
+
 		//Chance
 		if (card[n] != -1) {
 			possible[n] = false;
@@ -169,15 +181,45 @@ public class Scorecard {
 		else {
 			possible[n] = true;
 		}
+		n++;
 		
-		//6 of a kind (6 OF A KIND ONLY)
-
+		//Only does the following if playing 6-die Yahtzee
+		//I'm assuming these categories are only used when specifically there are 6 dice, so logic will be planned accordingly.
+		//If I misunderstood the requirements for these I can modifty the logic to account for a variable array size similar to previous categories.
+		if (sixDie) {
+			
+			//6 of a kind (6-DICE ONLY)
+			if (card[n] != -1) {
+				possible[n] = false;
+			}
+			else if (dice[0].value == dice[1].value && dice[1].value == dice[2].value && dice[2].value == dice[3].value &&
+					 dice[3].value == dice[4].value && dice[4].value == dice[5].value) {
+				
+				possible[n] = true;
+			}
+			n++;
 		
-		//Split (6 OF A KIND ONLY)
+			//Split (6-DICE ONLY)
+			if (card[n] != -1) {
+				possible[n] = false;
+			}
+			else if ((dice[0].value == dice[1].value && dice[1].value == dice[2].value) && (dice[3].value == dice[4].value && dice[4].value == dice[5].value)) {
+				possible[n] = true;
+			}
+			n++;
 
+			//Giant Straight (6-DICE ONLY)
+			if (card[n] != -1) {
+				possible[n] = false;
+			}
+			else if (dice[0].value + 1 == dice[1].value && dice[1].value + 1 == dice[2].value && dice[2].value + 1 == dice[3].value &&
+					 dice[3].value + 1 == dice[4].value && dice[4].value + 1 == dice[5].value) {
 
-		//Giant Straight (6 OF A KIND ONLY)
-		
+				possible[n] = true;
+			}
+			n++;
+			
+		}
 		
 	}
 	
@@ -192,61 +234,61 @@ public class Scorecard {
 			}
 			break;
 			
-		case 2:
+		case 2: //Twos
 			for (Dice die : dice) {
 				if (die.value == 2) { score += die.value; }
 			}
 			break;
 			
-		case 3:
+		case 3: //Threes
 			for (Dice die : dice) {
 				if (die.value == 3) { score += die.value; }
 			}
 			break;
 		
-		case 4:
+		case 4: //Fours
 			for (Dice die : dice) {
 				if (die.value == 4) { score += die.value; }
 			}
 			break;
 			
-		case 5:
+		case 5: //Fives
 			for (Dice die : dice) {
 				if (die.value == 5) { score += die.value; }
 			}
 			break;
 			
-		case 6:
+		case 6: //Sixes
 			for (Dice die : dice) {
 				if (die.value == 6) { score += die.value; }
 			}
 			break;
 			
-		case 7:
+		case 7: //Three-of-a-kind
 			for (Dice die : dice) {
 				score += die.value;
 			}
 			break;
 			
-		case 8:
+		case 8: //Four-of-a-kind
 			for (Dice die : dice) {
 				score += die.value;
 			}
 			break;
 			
-		case 9:
+		case 9: //Full House
 			score += 25;
 			break;
 			
-		case 10:
+		case 10: //Small Straight
 			score += 30;
 			break;
 			
-		case 11:
+		case 11: //Large Straight
 			score += 40;
 			break;
 			
-		case 12:
+		case 12: //Yahtzee
 			if (!yahtzeeBonusAvailable) {
 				yahtzeeBonusAvailable = true;
 				score += 50;
@@ -256,12 +298,23 @@ public class Scorecard {
 			}
 			break;
 			
-		case 13:
+		case 13: //Chance
 			for (Dice die : dice) {
 				score += die.value;
 			}
 			break;
 			
+		case 14: //Six-of-a-kind
+			score += 100;
+			break;
+
+		case 15: //Split
+			score += 50;
+			break;
+
+		case 16: //Giant Straight
+			score += 80;
+			break;
 		}
 		
 		return score;
@@ -270,7 +323,7 @@ public class Scorecard {
 	protected void saveScoreSelection(Dice[] dice, int selection, boolean zero) {
 		//Only does calculation of selected score category
 		//If statements in case the score to be recorded is zero
-		int score = -1;
+		int score = 0;
 		
 		if (zero) { score = 0; }
 		
@@ -377,11 +430,13 @@ public class Scorecard {
 	}
 	
 	public void displayCurrentScores(boolean sixDie) {
+		String[] values;
+
 		if (sixDie) {
-			String[] values = new String[16];
+			values = new String[16];
 		} 
 		else {
-			String[] values = new String[13];
+			values = new String[13];
 		}
 		
 		//This is to manage my method of using -1 for scores that haven't been recorded yet, since I don't want to display someone has a -1 for a score
@@ -427,5 +482,40 @@ public class Scorecard {
 		if (obtained) {
 			totalScore += 35;
 		}
+	}
+
+	//Decided to put this in it's own method as the logic was a little more than just a for loop
+	//Used ChatGPT to help work out logic of how to detect the requirements for the category
+	public boolean checkForFullHouse(Dice[] dice) {
+		
+		boolean hasThreeOfAKind = false;
+        boolean hasPair = false;
+        int currentCount = 1;
+        
+        int i = 1;
+        while (i < dice.length) {
+            if (dice[i].value == dice[i - 1].value) {
+                currentCount++; // Count consecutive identical numbers
+            } else {
+                // Check if we found a pair or three-of-a-kind in the previous group
+                if (currentCount == 3) {
+                    hasThreeOfAKind = true;
+                } else if (currentCount == 2) {
+                    hasPair = true;
+                }
+                currentCount = 1; // Reset for the next group
+            }
+            i++;
+        }
+        
+        // Check the last group after the loop
+        if (currentCount == 3) {
+            hasThreeOfAKind = true;
+        } else if (currentCount == 2) {
+            hasPair = true;
+        }
+        
+        // Full house if both a three-of-a-kind and a pair
+        return hasThreeOfAKind && hasPair;
 	}
 }

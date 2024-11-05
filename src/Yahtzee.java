@@ -137,7 +137,7 @@ public class Yahtzee {
         			}
         			
 					//End the rolling if the player has saved all dice.
-					for (int u = 0; i < savedDice.length; u++) {
+					for (int u = 0; u < savedDice.length; u++) {
 						if (savedDice[u] == false) {
 							allDiceSaved = false;
 						}
@@ -165,7 +165,7 @@ public class Yahtzee {
         		
         		System.out.println("\nHere are your scoring options. X means only zero is allowed.");
       
-        		//Display possible scoring categories based on dice array
+        		//Update possible scoring categories based on dice array
         		scorecards[p].currentEligibleScores(diceArray, sixDieYahtzee);
         		
         		//Display score value for eligible categories
@@ -175,7 +175,7 @@ public class Yahtzee {
         		System.out.println("Please select which score you'd like to register");
         		
         		//Validates user input of score category and saves their selection
-        		categorySelection = chooseScore(p, scorecards, scan);
+        		categorySelection = chooseScore(p, scorecards, categoryCount, scan);
         		zeroOverScore = zeroOrDice(p, scorecards, categorySelection, scan);
         		
         		//Saves chosen score to players scorecard
@@ -307,7 +307,7 @@ public class Yahtzee {
     }
     
     //Handles the player selecting a scoring category
-    private static int chooseScore(int player, Scorecard[] scorecards, Scanner scan) {
+    private static int chooseScore(int player, Scorecard[] scorecards, int categoryCount, Scanner scan) {
     	boolean isValid = true;
     	int selection = -1;
 		do {
@@ -326,7 +326,7 @@ public class Yahtzee {
 			
 			if (isValid) {
 				
-				//Validates it's a correct category number from 1 to 13
+				//Validates it's a number that matches a category
 				if (selection >= 1 && selection <= categoryCount) {
 					
 					//Validates that the player hasn't selected this category yet
