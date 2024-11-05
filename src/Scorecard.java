@@ -36,8 +36,10 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if (dice[0].value == 1 || dice[1].value == 1 || dice[2].value == 1 || dice[3].value == 1 || dice[4].value == 1) {
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length; i++) {
+				if (dice[i].value == 1) { possible[n] = true;}
+			}
 		}
 		n++;
 		
@@ -45,8 +47,10 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if (dice[0].value == 2 || dice[1].value == 2 || dice[2].value == 2 || dice[3].value == 2 || dice[4].value == 2) {
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length; i++) {
+				if (dice[i].value == 2) { possible[n] = true;}
+			}
 		}
 		n++;
 		
@@ -54,8 +58,10 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if (dice[0].value == 3 || dice[1].value == 3 || dice[2].value == 3 || dice[3].value == 3 || dice[4].value == 3) {
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length; i++) {
+				if (dice[i].value == 3) { possible[n] = true;}
+			}
 		}
 		n++;
 		
@@ -63,8 +69,10 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if (dice[0].value == 4 || dice[1].value == 4 || dice[2].value == 4 || dice[3].value == 4 || dice[4].value == 4) {
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length; i++) {
+				if (dice[i].value == 4) { possible[n] = true;}
+			}
 		}
 		n++;
 		
@@ -72,8 +80,10 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if (dice[0].value == 5 || dice[1].value == 5 || dice[2].value == 5 || dice[3].value == 5 || dice[4].value == 5) {
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length; i++) {
+				if (dice[i].value == 5) { possible[n] = true;}
+			}
 		}
 		n++;
 		
@@ -81,8 +91,10 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if (dice[0].value == 6 || dice[1].value == 6 || dice[2].value == 6 || dice[3].value == 6 || dice[4].value == 6) {
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length; i++) {
+				if (dice[i].value == 6) { possible[n] = true;}
+			}
 		}
 		n++;
 		
@@ -90,10 +102,12 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if (((dice[0].value == dice[1].value) && (dice[1].value == dice[2].value)) 
-		      || ((dice[1].value == dice[2].value) && (dice[2].value == dice[3].value))
-		      || ((dice[2].value == dice[3].value) && (dice[3].value == dice[4].value))) {
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length - 2; i++) {
+				if (dice[i].value == dice[i+1].value && dice[i+1].value == dice[i+2].value) {
+					possible[n] = true;
+				}
+			}
 		}
 		n++;
 		
@@ -101,9 +115,12 @@ public class Scorecard {
 		if (card[n] != -1) {
 			possible[n] = false;
 		}
-		else if (((dice[0].value == dice[1].value) && (dice[1].value == dice[2].value) && (dice[2].value == dice[3].value))
-		       || (dice[1].value == dice[2].value) && (dice[2].value == dice[3].value) && (dice[3].value == dice[4].value)) {
-			possible[n] = true;
+		else {
+			for (int i = 0; i < dice.length - 3; i++) {
+				if (dice[i].value == dice[i+1].value && dice[i+1].value == dice[i+2].value && dice[i+2].value == dice[i+3].value) {
+					possible[n] = true;
+				}
+			}
 		}
 		n++;
 		
