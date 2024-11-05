@@ -75,7 +75,7 @@ public class Yahtzee {
 //START OF GAME
         
         //Loop 13 times - only 13 turns are possible in a game of Yahtzee
-        for (int t = 1; t <= 3; t++) {
+        for (int t = 1; t <= 13; t++) {
         System.out.println("TURN " + t);
         	
         	//Loop for however many players there are
