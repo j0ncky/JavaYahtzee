@@ -158,6 +158,7 @@ public class Scorecard {
 		
 		//Split (6 OF A KIND ONLY)
 
+
 		//Giant Straight (6 OF A KIND ONLY)
 		
 		
@@ -265,61 +266,61 @@ public class Scorecard {
 				}
 				break;
 				
-			case 2:
+			case 2: //Twos
 				for (Dice die : dice) {
 					if (die.value == 2) { score += 2; }
 				}
 				break;
 				
-			case 3:
+			case 3: //Threes
 				for (Dice die : dice) {
 					if (die.value == 3) { score += 3; }
 				}
 				break;
 			
-			case 4:
+			case 4: //Fours
 				for (Dice die : dice) {
 					if (die.value == 4) { score += 4; }
 				}
 				break;
 				
-			case 5:
+			case 5: //Fives
 				for (Dice die : dice) {
 					if (die.value == 5) { score += 5; }
 				}
 				break;
 				
-			case 6:
+			case 6: //Sixes
 				for (Dice die : dice) {
 					if (die.value == 6) { score += 6; }
 				}
 				break;
 				
-			case 7:
+			case 7: //Three-of-a-kind
 				for (Dice die : dice) {
 					score += die.value;
 				}
 				break;
 				
-			case 8:
+			case 8: //Four-of-a-kind
 				for (Dice die : dice) {
 					score += die.value;
 				}
 				break;
 				
-			case 9:
+			case 9: //Full House
 				score += 25;
 				break;
 				
-			case 10:
+			case 10: //Small Straight
 				score += 30;
 				break;
 				
-			case 11:
+			case 11: //Large Straight
 				score += 40;
 				break;
 				
-			case 12:
+			case 12: //Yahtzee
 				if (!yahtzeeBonusAvailable) {
 					yahtzeeBonusAvailable = true;
 					score += 50;
@@ -329,16 +330,25 @@ public class Scorecard {
 				}
 				break;
 				
-			case 13:
+			case 13: //Chance
 				for (Dice die : dice) {
 					score += die.value;
 				}
 				break;
 				
+			case 14: //Six-of-a-kind
+				score += 100;
+				break;
+
+			case 15: //Split
+				score += 50;
+				break;
+
+			case 16: //Giant Straight
+				score += 80;
+				break;
 			}
-			
 		}
-		
 		
 		card[selection - 1] = score;
 		
@@ -349,8 +359,13 @@ public class Scorecard {
 		System.out.println("Score recorded\n");
 	}
 	
-	public void displayCurrentScores() {
-		String[] values = new String[13];
+	public void displayCurrentScores(boolean sixDie) {
+		if (sixDie) {
+			String[] values = new String[16];
+		} 
+		else {
+			String[] values = new String[13];
+		}
 		
 		//This is to manage my method of using -1 for scores that haven't been recorded yet, since I don't want to display someone has a -1 for a score
 		for (int i = 0; i < values.length; i++) {
@@ -367,11 +382,14 @@ public class Scorecard {
 		System.out.println("| Aces: [" + values[0] + "] | Twos: [" + values[1] + "] | Threes: [" + values[2] + 
 						   "] | Fours: [" + values[3] + "] | Fives: [" + values[4] + "] | Sixes: [" + values[5] + "] |");
 		
+		
 		//Prints lower section
 		System.out.println("\nLOWER SECTION");
 		System.out.println("| 3 of a kind: [" + values[6] + "] | 4 of a kind: [" + values[7] + "] | Full House: [" + values[8] + "] | Small Straight: [" + values[9] +
-						   "] | Large Straight: [" + values[10] + "] | YAHTZEE: [" + values[11] + "] | Chance: [" + values[12] + "] |\n");
-		
+						   "] | Large Straight: [" + values[10] + "] | YAHTZEE: [" + values[11] + "] | Chance: [" + values[12] + "] |");
+		if (sixDie) {
+			System.out.println("| 6 of a kind: [" + values[13] + "] | Split: [" + values[14] + "] | Giant Straight: [" + values[15] + "] |\n");
+		}
 	}
 	
 	public int totalScore() {

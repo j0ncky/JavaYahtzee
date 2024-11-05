@@ -14,17 +14,16 @@ public class Yahtzee {
         
         Scorecard[] scorecards;
 		int categoryCount;
-        int categorySelection = -1;
-        boolean zeroOverScore = false;
+    	int categorySelection = -1;
+       
+		boolean zeroOverScore = false;
 		boolean sixDieYahtzee;
         
-        boolean[] savedDice = new boolean[5];
+        boolean[] savedDice;
+		boolean allDiceSaved = true;
         
         Scanner scan = new Scanner(System.in);
-        
-        for (int i = 0; i < 5; i++) {
-            diceArray[i] = new Dice();
-        }
+
 /*------------------------------------------------------------------------------------------------------------------*/
 
 		System.out.println("Type '5' to play standard Yahtzee, type '6' to play 6-Dice Yahtzee");
@@ -33,17 +32,30 @@ public class Yahtzee {
 		while (true) {
 			String response;
 			response = scan.nextLine();
-				
+			
+			//Initialization for standard Yahtzee
 			if (response.equals("5")) {
 				diceArray = new Dice[5];
+				savedDice = new boolean[5];
 				categoryCount = 13;
 				sixDieYahtzee = false;
+				for (int i = 0; i < 5; i++) {
+					diceArray[i] = new Dice();
+				}
+
 				break;
 			}
+			
+			//Initialization for 6-die Yahtzee
 			else if (response.equals("6")) {
 				diceArray = new Dice[6];
+				savedDice = new boolean[6];
 				categoryCount = 16;
 				sixDieYahtzee = true;
+				for (int i = 0; i < 6; i++) {
+					diceArray[i] = new Dice();
+				}
+
 				break;
 			}
 			else {
@@ -102,8 +114,8 @@ public class Yahtzee {
 /*------------------------------------------------------------------------------------------------------------------*/
 //START OF GAME
         
-        //Loop 13 times - only 13 turns are possible in a game of Yahtzee
-        for (int t = 1; t <= 13; t++) {
+        //Loop the game for however many turns there are categories.
+        for (int t = 1; t <= categoryCount; t++) {
         System.out.println("TURN " + t);
         	
         	//Loop for however many players there are
@@ -111,9 +123,9 @@ public class Yahtzee {
         		System.out.println("Player " + (p + 1) + ", it is your turn");
         		
         		//Display current player's scorecard
-        		scorecards[p].displayCurrentScores();
+        		scorecards[p].displayCurrentScores(sixDieYahtzee);
         		
-        		//Loop up to 3 times, or break if they save all 5 dice
+        		//Loop up to 3 times, or break if they save all dice
         		for(int i = 1; i <= 3; i++) {
         			
         			//If this is the first roll of the turn for this player, makes sure no dice are saved
@@ -124,10 +136,18 @@ public class Yahtzee {
         				}
         			}
         			
-        			//End the rolling if the player has saved all 5 dice.
-        			if (savedDice[0] == true && savedDice[1] == true && savedDice[2] == true && savedDice[3] == true && savedDice[4] == true) {
+					//End the rolling if the player has saved all dice.
+					for (int u = 0; i < savedDice.length; u++) {
+						if (savedDice[u] == false) {
+							allDiceSaved = false;
+						}
+					}
+        			if (allDiceSaved) {
         				break;
         			}
+					else {
+						allDiceSaved = true;
+					}
         			
         			//Rolls the unsaved dice
         			for (int s = 0; s < savedDice.length; s++) {
@@ -307,7 +327,7 @@ public class Yahtzee {
 			if (isValid) {
 				
 				//Validates it's a correct category number from 1 to 13
-				if (selection >= 1 && selection <= 13) {
+				if (selection >= 1 && selection <= categoryCount) {
 					
 					//Validates that the player hasn't selected this category yet
 					if (scorecards[player].card[selection - 1] == -1) {
@@ -329,7 +349,7 @@ public class Yahtzee {
 					}
 				}
 				else {
-					System.out.println("Please only enter a number from 1 to 13");
+					System.out.println("Please only enter a number that corresponds to a category.");
 					isValid = false;
 				}
 		
