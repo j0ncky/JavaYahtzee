@@ -1,9 +1,10 @@
 import java.util.Scanner;
 import java.util.Random;
 
+
 public class Yahtzee {
     
-	protected static Dice[] diceArray = new Dice[5];
+	protected static Dice[] diceArray;
 	
 	//Main
 	public static void main(String[] args) {
@@ -12,8 +13,10 @@ public class Yahtzee {
         int playerCount = 0;
         
         Scorecard[] scorecards;
+		int categoryCount;
         int categorySelection = -1;
         boolean zeroOverScore = false;
+		boolean sixDieYahtzee;
         
         boolean[] savedDice = new boolean[5];
         
@@ -22,6 +25,31 @@ public class Yahtzee {
         for (int i = 0; i < 5; i++) {
             diceArray[i] = new Dice();
         }
+/*------------------------------------------------------------------------------------------------------------------*/
+
+		System.out.println("Type '5' to play standard Yahtzee, type '6' to play 6-Dice Yahtzee");
+
+		//While loop to make sure user inputs valid response
+		while (true) {
+			String response;
+			response = scan.nextLine();
+				
+			if (response.equals("5")) {
+				diceArray = new Dice[5];
+				categoryCount = 13;
+				sixDieYahtzee = false;
+				break;
+			}
+			else if (response.equals("6")) {
+				diceArray = new Dice[6];
+				categoryCount = 16;
+				sixDieYahtzee = true;
+				break;
+			}
+			else {
+				System.out.println("Please enter a valid response");
+			}
+		}
 
 /*------------------------------------------------------------------------------------------------------------------*/
         
@@ -68,14 +96,14 @@ public class Yahtzee {
         //Create Scorecards for every player as well as initialize them
         scorecards = new Scorecard[playerCount];
         for (int i = 0; i < scorecards.length; i++) {
-        	scorecards[i] = new Scorecard();
+        	scorecards[i] = new Scorecard(categoryCount);
         }
         
 /*------------------------------------------------------------------------------------------------------------------*/
 //START OF GAME
         
         //Loop 13 times - only 13 turns are possible in a game of Yahtzee
-        for (int t = 1; t <= 3; t++) {
+        for (int t = 1; t <= 13; t++) {
         System.out.println("TURN " + t);
         	
         	//Loop for however many players there are
@@ -118,7 +146,7 @@ public class Yahtzee {
         		System.out.println("\nHere are your scoring options. X means only zero is allowed.");
       
         		//Display possible scoring categories based on dice array
-        		scorecards[p].currentEligibleScores(diceArray);
+        		scorecards[p].currentEligibleScores(diceArray, sixDieYahtzee);
         		
         		//Display score value for eligible categories
         		displayScoreValues(p, scorecards);
@@ -370,7 +398,7 @@ public class Yahtzee {
     private static void displayDiceValues(Dice[] arr) {
     	
     	System.out.println("Your dice values are now:");
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < arr.length; i++) {
 			System.out.println("Die " + (i + 1) + ": " + arr[i].value);
 		}
     }

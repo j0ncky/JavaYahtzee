@@ -2,8 +2,8 @@ import java.util.Arrays;
 
 public class Scorecard {
 
-	protected int[] card = new int[13];
-	protected boolean[] possible = new boolean[13];
+	protected int[] card;
+	protected boolean[] possible;
 	protected int totalScore;
 	
 	protected boolean yahtzeeBonusAvailable;
@@ -13,7 +13,10 @@ public class Scorecard {
 			 						 "3 of a Kind", "4 of a Kind", "Full House", "Small Straight", "Large Straight", "Yahtzee", "Chance" };
 	
 	//Constructor
-	public Scorecard() {
+	public Scorecard(int categoryCount) {
+		card = new int[categoryCount];
+		possible  = new boolean[categoryCount];
+		
 		Arrays.fill(card, -1);
 		Arrays.fill(possible, false);
 		
@@ -24,7 +27,7 @@ public class Scorecard {
 	}
 	
 	//13 different, long if statements, checking each scoring category with the dice array to see which ones are eligible to be scored
-	public void currentEligibleScores(Dice[] dice) {
+	public void currentEligibleScores(Dice[] dice, boolean sixDie) {
 		
 		int n = 0;
 		Arrays.fill(possible, false);
